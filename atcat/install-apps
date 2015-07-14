@@ -1,0 +1,269 @@
+#!/bin/sh
+
+#=====================================================================
+# realpath.sh
+#   https://github.com/mkropat/sh-realpath
+#
+# by Michael Kropat, aka mkropat
+#   http://mkropat.github.io/
+# 
+# Thank you, Michael, for creating such a wonderful project.  Your
+# code has saved me from introducing a dependency on realpath.
+#=====================================================================
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2014 Michael Kropat
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# The software is provided "as is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall the
+# authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising from,
+# out of or in connection with the software or the use or other dealings in
+# the software.
+
+realpath() {
+    canonicalize_path "$(resolve_symlinks "$1")"
+}
+
+resolve_symlinks() {
+    _resolve_symlinks "$1"
+}
+
+_resolve_symlinks() {
+    _assert_no_path_cycles "$@" || return
+
+    local dir_context path
+    path=$(readlink -- "$1")
+    if [ $? -eq 0 ]; then
+        dir_context=$(dirname -- "$1")
+        _resolve_symlinks "$(_prepend_dir_context_if_necessary "$dir_context" "$path")" "$@"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+_prepend_dir_context_if_necessary() {
+    if [ "$1" = . ]; then
+        printf '%s\n' "$2"
+    else
+        _prepend_path_if_relative "$1" "$2"
+    fi
+}
+
+_prepend_path_if_relative() {
+    case "$2" in
+        /* ) printf '%s\n' "$2" ;;
+         * ) printf '%s\n' "$1/$2" ;;
+    esac
+}
+
+_assert_no_path_cycles() {
+    local target path
+
+    target=$1
+    shift
+
+    for path in "$@"; do
+        if [ "$path" = "$target" ]; then
+            return 1
+        fi
+    done
+}
+
+canonicalize_path() {
+    if [ -d "$1" ]; then
+        _canonicalize_dir_path "$1"
+    else
+        _canonicalize_file_path "$1"
+    fi
+}
+
+_canonicalize_dir_path() {
+    (cd "$1" 2>/dev/null && pwd -P)
+}
+
+_canonicalize_file_path() {
+    local dir file
+    dir=$(dirname -- "$1")
+    file=$(basename -- "$1")
+    (cd "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$file")
+}
+
+
+#=====================================================================
+# Now that we have Michael's wonderful shell-based realpath, let's use
+# it to get our actual location.
+#=====================================================================
+
+scriptfile="$(canonicalize_path "$(resolve_symlinks "$0")")"
+scriptdir="$(dirname "$scriptfile")"
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#=====================================================================
+# Install Apps
+#=====================================================================
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#=====================================================================
+# Determine which apps are already installed.
+#=====================================================================
+installed="`system_profiler SPApplicationsDataType`"
+
+
+cat <<'EOF'
+
+#=====================================================================
+# `brew cask`: https://github.com/caskroom/homebrew-cask
+#
+# For installing apps via the commandline.
+#
+# e.g. brew cask install firefox
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install caskroom/cask/brew-cask
+EOF
+brew install caskroom/cask/brew-cask
+
+
+cat <<'EOF'
+
+#=====================================================================
+# KeePassX.
+#
+# A simple, reliable, open-source password vault.  I use it for
+# everything. 
+#
+# In combination with the `pws` script, this is one of the easiest
+# ways to get started using a password vault.
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/KeePassX.app")" ]]; then
+cat <<'EOF'
+brew cask install keepassx
+EOF
+brew cask install keepassx
+else
+  echo "KeePassX already installed."
+fi
+
+
+cat <<'EOF'
+
+#=====================================================================
+# Knox.  https://help.agilebits.com/Knox/
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/Knox.app")" ]]; then
+cat <<'EOF'
+brew cask install knox
+EOF
+brew cask install knox
+else
+  echo "Knox already installed."
+fi
+
+
+cat <<'EOF'
+
+#=====================================================================
+# MacVim.
+#=====================================================================
+EOF
+
+#if [[ -z "`which mvim`" ]]; then
+if [[ -z "$(echo "$installed" | grep "/MacVim.app")" ]]; then
+cat <<'EOF'
+brew cask install macvim
+EOF
+brew cask install macvim
+else
+  echo "MacVim already installed."
+fi
+
+
+cat <<'EOF'
+
+#=====================================================================
+# Beyond Compare.
+#
+# For diffing files.  `comparefiles` uses this.
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/Beyond Compare.app")" ]]; then
+cat <<'EOF'
+brew cask install beyond-compare
+EOF
+brew cask install beyond-compare
+else
+  echo "Beyond Compare already installed."
+fi
+
+
+
+cat <<'EOF'
+
+#=====================================================================
+# Optimal Layout.
+#
+# Alt-1 to fullscreen the current window.
+# Alt-2 to vertically halfscreen the current window.
+# Alt-3 to horizontally halfscreen the current window.
+# Alt-4 to quarterscreen the current window.
+# Alt-5 to center the current window.
+# Alt-R to switch window between monitors.
+# Alt-F to find a window by name.
+# Alt-Tab to switch between windows, sorted by most recent activity
+#   time.  (e.g. Windows-style alt-tab.)
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/Optimal Layout.app")" ]]; then
+cat <<EOF
+brew cask install optimal-layout
+EOF
+brew cask install optimal-layout
+#
+# Install Optimal Layout settings file.
+#
+cat <<EOF
+cp "$scriptdir/settings/home/Library/Preferences/net.lowndes.windowflow.plist" "$HOME/Library/Preferences/"
+EOF
+cp "$scriptdir/settings/home/Library/Preferences/net.lowndes.windowflow.plist" "$HOME/Library/Preferences/"
+else
+  echo "Optimal Layout already installed."
+fi
+
+
+# cat <<'EOF'
+
+# #=====================================================================
+# # VMWare Fusion.
+# #=====================================================================
+# EOF
+
+# cat <<'EOF'
+# brew cask install vmware-fusion
+# EOF
+# brew cask install vmware-fusion
+
