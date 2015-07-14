@@ -1,9 +1,12 @@
 #!/bin/bash
 
+username="${1:-$USER}"
+shift 1
+
 sosdir="`sospath`"
 if [[ -z "$sosdir" ]]; then
   # critical failure.
   exit 1
 fi
 
-printf "%s\n" "$sosdir/$USER/bin"
+printf "%s\n" "$sosdir/$username/bin"
