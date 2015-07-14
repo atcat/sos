@@ -6,9 +6,6 @@
 #
 # by Michael Kropat, aka mkropat
 #   http://mkropat.github.io/
-# 
-# Thank you, Michael, for creating such a wonderful project.  Your
-# code has saved me from introducing a dependency on realpath.
 #=====================================================================
 
 # The MIT License (MIT)
@@ -103,8 +100,7 @@ _canonicalize_file_path() {
 
 
 #=====================================================================
-# Now that we have Michael's wonderful shell-based realpath, let's use
-# it to get our actual location.
+# store the absolute path to this script.
 #=====================================================================
 
 scriptfile="$(canonicalize_path "$(resolve_symlinks "$0")")"
