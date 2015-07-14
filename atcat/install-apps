@@ -250,6 +250,25 @@ else
 fi
 
 
+cat <<'EOF'
+
+#=====================================================================
+# Firefox.
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/Firefox.app")" ]]; then
+cat <<'EOF'
+brew cask install firefox
+EOF
+brew cask install firefox
+else
+  echo "Firefox already installed."
+fi
+
+
+
+
 # cat <<'EOF'
 
 # #=====================================================================
