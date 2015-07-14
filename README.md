@@ -139,3 +139,32 @@ $ printf " foo\n bar\n baz\n a\n b\n c\n" | skiplines 2 3
  baz
 ```
 
+
+### natsort
+
+Performs a natural sort of stdin's lines.
+
+```sh
+$ printf " 10\n 11\n 12\n 1\n 2\n 3\n"
+ 10
+ 11
+ 12
+ 1
+ 2
+ 3
+$ printf " 10\n 11\n 12\n 1\n 2\n 3\n" | sort
+ 1
+ 10
+ 11
+ 12
+ 2
+ 3
+$ printf " 10\n 11\n 12\n 1\n 2\n 3\n" | natsort
+ 1
+ 2
+ 3
+ 10
+ 11
+ 12
+```
+
