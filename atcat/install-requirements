@@ -1,0 +1,280 @@
+#!/bin/sh
+
+#=====================================================================
+# realpath.sh
+#   https://github.com/mkropat/sh-realpath
+#
+# by Michael Kropat, aka mkropat
+#   http://mkropat.github.io/
+# 
+# Thank you, Michael, for creating such a wonderful project.  Your
+# code has saved me from introducing a dependency on realpath.
+#=====================================================================
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2014 Michael Kropat
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# The software is provided "as is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall the
+# authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising from,
+# out of or in connection with the software or the use or other dealings in
+# the software.
+
+realpath() {
+    canonicalize_path "$(resolve_symlinks "$1")"
+}
+
+resolve_symlinks() {
+    _resolve_symlinks "$1"
+}
+
+_resolve_symlinks() {
+    _assert_no_path_cycles "$@" || return
+
+    local dir_context path
+    path=$(readlink -- "$1")
+    if [ $? -eq 0 ]; then
+        dir_context=$(dirname -- "$1")
+        _resolve_symlinks "$(_prepend_dir_context_if_necessary "$dir_context" "$path")" "$@"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+_prepend_dir_context_if_necessary() {
+    if [ "$1" = . ]; then
+        printf '%s\n' "$2"
+    else
+        _prepend_path_if_relative "$1" "$2"
+    fi
+}
+
+_prepend_path_if_relative() {
+    case "$2" in
+        /* ) printf '%s\n' "$2" ;;
+         * ) printf '%s\n' "$1/$2" ;;
+    esac
+}
+
+_assert_no_path_cycles() {
+    local target path
+
+    target=$1
+    shift
+
+    for path in "$@"; do
+        if [ "$path" = "$target" ]; then
+            return 1
+        fi
+    done
+}
+
+canonicalize_path() {
+    if [ -d "$1" ]; then
+        _canonicalize_dir_path "$1"
+    else
+        _canonicalize_file_path "$1"
+    fi
+}
+
+_canonicalize_dir_path() {
+    (cd "$1" 2>/dev/null && pwd -P)
+}
+
+_canonicalize_file_path() {
+    local dir file
+    dir=$(dirname -- "$1")
+    file=$(basename -- "$1")
+    (cd "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$file")
+}
+
+
+#=====================================================================
+# Now that we have Michael's wonderful shell-based realpath, let's use
+# it to get our actual location.
+#=====================================================================
+
+scriptfile="$(canonicalize_path "$(resolve_symlinks "$0")")"
+scriptdir="$(dirname "$scriptfile")"
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#=====================================================================
+# Install Scripts
+#=====================================================================
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cat <<'EOF'
+
+#=====================================================================
+# pip.
+#
+# We need pip for installing various python modules.
+#=====================================================================
+EOF
+
+if [[ -z "`which pip`" ]]; then
+cat <<'EOF'
+sudo easy_install pip
+EOF
+sudo easy_install pip
+else
+  echo "pip already installed."
+fi
+
+cat <<'EOF'
+#=====================================================================
+# pip install natsort
+#
+# Used by `humansort`.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+sudo pip install natsort
+EOF
+sudo pip install natsort
+
+
+cat <<'EOF'
+#=====================================================================
+# Install homebrew.
+#=====================================================================
+EOF
+
+if [[ -z "`which brew`" ]]; then
+cat <<'EOF'
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+EOF
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+  echo "Homebrew already installed."
+fi
+
+# cat <<'EOF'
+# #=====================================================================
+# # Updating homebrew.
+# #=====================================================================
+# EOF
+
+# cat <<'EOF'
+# brew update
+# EOF
+# brew update
+
+
+cat <<'EOF'
+#=====================================================================
+# ag.
+#
+# To search recursively through for a phrase.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install ag
+EOF
+brew install ag
+
+
+cat <<'EOF'
+#=====================================================================
+# sf-pwgen.
+#
+# `pws` uses this to generate memorable passwords.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install sf-pwgen
+EOF
+brew install sf-pwgen
+
+
+cat <<'EOF'
+#=====================================================================
+# tree and pypy.
+#
+# `l` needs `tree` to function and `pypy` to function quickly.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install tree
+EOF
+brew install tree
+
+cat <<'EOF'
+brew install pypy
+EOF
+brew install pypy
+
+
+cat <<'EOF'
+#=====================================================================
+# ghead, from coreutils.
+#
+# `skip-last-n-lines` needs ghead, since os x's version of `head`
+# doesn't support negative numbers.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install coreutils 
+EOF
+brew install coreutils 
+
+
+cat <<'EOF'
+#=====================================================================
+# sponge, from moreutils.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install moreutils
+EOF
+brew install moreutils
+
+
+cat <<'EOF'
+#=====================================================================
+# nmap.
+#
+# Used by `pingsweep`, `portscan`, et al.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install nmap 
+EOF
+brew install nmap 
+
+
+cat <<'EOF'
+#=====================================================================
+# arp-scan.
+#
+# Used by `netinfo-arp-scan`
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install arp-scan 
+EOF
+brew install arp-scan 
+
