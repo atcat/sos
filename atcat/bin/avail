@@ -253,7 +253,7 @@ def avail(name):
     if should('reddit'): yield forkurl(reddit_url, reddit_avail, reddit_prn, name)
     if should('github'): yield forkurl(github_url, github_avail, github_prn, name)
     if should('twitter'): yield forkurl(twitter_url, twitter_avail, twitter_prn, name)
-    #if should('hn'): yield forkurl(hn_url, hn_avail, hn_prn, name)
+    if should('hn'): yield forkurl(hn_url, hn_avail, hn_prn, name)
     
 
 def run():
