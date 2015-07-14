@@ -110,3 +110,32 @@ b
 1
 ```
 
+### skiplines
+
+`skiplines 2` will skip the first two lines of stdin.
+
+`skiplines 0 3` will skip the last three lines of stdin.
+
+`skiplines 2 3` will skip the first two and last three lines of stdin.
+
+```sh
+$ printf " foo\n bar\n baz\n a\n b\n c\n"
+ foo
+ bar
+ baz
+ a
+ b
+ c
+$ printf " foo\n bar\n baz\n a\n b\n c\n" | skiplines 2
+ baz
+ a
+ b
+ c
+$ printf " foo\n bar\n baz\n a\n b\n c\n" | skiplines 0 3
+ foo
+ bar
+ baz
+$ printf " foo\n bar\n baz\n a\n b\n c\n" | skiplines 2 3
+ baz
+```
+
