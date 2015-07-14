@@ -8,7 +8,7 @@ if [ -z "$(printf "%s" "$searching" | trim)" ]; then
 fi
 
 # cat <<EOF
-# printf "%s" "$input" | re $searching
+# printf "%s" "$input" | reflags $searching
 # EOF
-printf "%s" "$input" | re $searching
+printf "%s" "$input" | reflags $searching
 
