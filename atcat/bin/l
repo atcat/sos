@@ -137,8 +137,8 @@ def cmd(progs, paths, baseprog="tree"):
         errcheck(out, err)
         input = out
     if args.only_paths:
-        #out, err = atcat._system('cols', [',3:'], stdin=input)
-        out, err = atcat._system('l-1', [], stdin=input)
+        out, err = atcat._system('cols', [',3:'], stdin=input)
+        #out, err = atcat._system('l-1', [], stdin=input)
         errcheck(out, err)
         input = out
     out = input
