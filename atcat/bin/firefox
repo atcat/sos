@@ -1,0 +1,3 @@
+#!/bin/sh
+exec "$(whichapp "Firefox")/Contents/MacOS/firefox" "$@"
+

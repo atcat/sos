@@ -1,0 +1,19 @@
+#!/bin/bash
+
+n=${1:-0}
+
+
+if $(echo $n | contains '^-'); then
+  #
+  # positive: 0-index from first line.
+  #
+  n="$(math "$n + 1")"
+  firstlines $n | lastline
+else
+  #
+  # negative: index from last line.
+  #
+  n=$(echo $n | replace '-' '')
+  lastlines $n | firstline
+fi
+

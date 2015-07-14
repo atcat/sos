@@ -6,9 +6,6 @@
 #
 # by Michael Kropat, aka mkropat
 #   http://mkropat.github.io/
-# 
-# Thank you, Michael, for creating such a wonderful project.  Your
-# code has saved me from introducing a dependency on realpath.
 #=====================================================================
 
 # The MIT License (MIT)
@@ -103,13 +100,11 @@ _canonicalize_file_path() {
 
 
 #=====================================================================
-# Now that we have Michael's wonderful shell-based realpath, let's use
-# it to get our actual location.
+# store the absolute path to this script.
 #=====================================================================
 
 scriptfile="$(canonicalize_path "$(resolve_symlinks "$0")")"
 scriptdir="$(dirname "$scriptfile")"
-
 
 
 
@@ -253,6 +248,25 @@ cp "$scriptdir/settings/home/Library/Preferences/net.lowndes.windowflow.plist" "
 else
   echo "Optimal Layout already installed."
 fi
+
+
+cat <<'EOF'
+
+#=====================================================================
+# Firefox.
+#=====================================================================
+EOF
+
+if [[ -z "$(echo "$installed" | grep "/Firefox.app")" ]]; then
+cat <<'EOF'
+brew cask install firefox
+EOF
+brew cask install firefox
+else
+  echo "Firefox already installed."
+fi
+
+
 
 
 # cat <<'EOF'
