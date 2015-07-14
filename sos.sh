@@ -5,6 +5,8 @@
 #=====================================================================
 
 if [[ -z "$sospath" ]]; then
+if [[ -z "`cat $HOME/.bash_profile | grep '^sospath='`" ]]; then
+
 echo "# Add this to the bottom of your ~/.bash_profile file:"
 echo ""
 
@@ -31,6 +33,7 @@ EOF
 fi
 
 exit 1
+fi
 fi
 
 
