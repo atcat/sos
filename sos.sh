@@ -9,18 +9,20 @@ echo "# Add this to the bottom of your ~/.bash_profile file:"
 echo ""
 
 read -r -d '' sos_bash_profile <<EOF
-#
+#=====================================================================
 # github.com/atcat/sos
-#
+#=====================================================================
 sospath="`pwd`"
 source "\$sospath/sos.sh"
+#source "$sospath/atcat/.bash_profile" 
+unset sospath
 EOF
 cat <<EOF
 $sos_bash_profile
 
 EOF
 
-read -r -p "Append this to your ~/.bash_profile now? [Y/n] " response
+read -r -p "Add that to your ~/.bash_profile now? [Y/n] " response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 then
 cat >>"$HOME/.bash_profile" <<EOF
@@ -37,8 +39,9 @@ fi
 #=====================================================================
 
 # add sos/bin to PATH.
-export PATH="$PATH:$(pwd)/bin"
+export PATH="$PATH:$sospath/bin"
 
-# add sos/atcat/bin to PATH.
-export PATH="$PATH:$(pwd)/atcat/bin"
+# add sos/atcat/bin to PATH and PYTHONPATH.
+export PATH="$PATH:$sospath/atcat/bin"
+export PYTHONPATH="$PYTHONPATH:$sospath/atcat/bin"
 
