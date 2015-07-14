@@ -217,7 +217,8 @@ def bash(cmdline, interactive=False, login=False):
 
 
 #===============================================================================
-# load a binary python script file from ~/bin as a module, such as ~/bin/hex2ip
+# load a chmod +x'd python script file as a module, 
+# e.g.  $(sosbin atcat)/hex2ip
 #===============================================================================
 
 import imp
@@ -314,7 +315,11 @@ def cmd(cmd, stdin=None, stdout=subprocess.PIPE, stderr=None, shell=False):
         cmd = cmd.replace('"""', "'")
     #print cmd
 
-    p = subprocess.Popen(cmd, stdout=stdout, stderr=stderr, stdin=stdin, shell=shell, env=getenv())
+    try:
+        p = subprocess.Popen(cmd, stdout=stdout, stderr=stderr, stdin=stdin, shell=shell, env=getenv())
+    except OSError:
+        print "atcat.cmd(): OSError for: " + repr(cmd)
+        asserting(False)
     return p.communicate(input=inputdata)
 command=cmd
 
@@ -327,7 +332,11 @@ def _stdin(stdin):
 def _popen(cmd, stdout, stdin, shell):
     stdin, input = _stdin(stdin)
     #sys.stderr.write('_popen() %s\n' % repr(cmd))
-    p = subprocess.Popen(cmd, stdout=stdout, stdin=stdin, shell=shell, env=getenv())
+    try:
+        p = subprocess.Popen(cmd, stdout=stdout, stdin=stdin, shell=shell, env=getenv())
+    except OSError:
+        print "atcat._popen(): OSError for: " + repr(cmd)
+        asserting(False)
     out, err = p.communicate(input=input)
     return out, err
 
