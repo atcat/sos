@@ -73,3 +73,40 @@ rab
 zab
 ```
 
+### replace
+
+For each pair of commandline arguments x, y: stdin.replace(x, y)
+
+For commandline args, transforms '\n' into newline, '\r' into carriage
+return, '\t' into tab, etc.  Also transforms unicode like '\u0000',
+etc.
+
+```sh
+$ printf "foo\nbar\nbaz\n"
+foo
+bar
+baz
+$ printf "foo\nbar\nbaz\n" | replace 'o' 'z'
+fzz
+bar
+baz
+$ printf "foo\nbar\nbaz\n" | replace 'o' 'z' 'z' '1'
+f11
+bar
+ba1
+$ printf "foo\nbar\nbaz\n" | replace 'z' '1' 'o' 'z'
+fzz
+bar
+ba1
+$ printf "foo\nbar\nbaz\n" | replace 'z' '1' 'o' 'z' 'a' '\\n'
+fzz
+b\nr
+b\n1
+$ printf "foo\nbar\nbaz\n" | replace 'z' '1' 'o' 'z' 'a' '\\n' '\\n' '\n'
+fzz
+b
+r
+b
+1
+```
+
