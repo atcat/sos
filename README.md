@@ -1,6 +1,89 @@
 # sos
 
-## Scripts
+## Terminal Utilities
+
+### l
+
+Use `l` to recursively list files and folders.
+
+`l`: For each path under `pwd`, lists: size, last modified time, path
+
+`l -1`: Only prints path, disables colorization.
+
+`l -n`: Same as `l`, but disable colorization.
+
+#### l time, l size, l type
+
+`l time`: Sort `l` by modified time
+
+`l size`: Sort `l` by file size
+
+`l type`: Sort `l` by file extension
+
+#### l 1, l 2, l 3, ...
+
+`l 1`: Examine `pwd/*`, no recursion.
+
+`l 2`: Examine `pwd/*/*`, i.e. upto child folders.
+
+`l 3`: Examine `pwd/*/*/*`, i.e. upto grandchild folders.
+
+
+`l -n ~/Downloads | igrep \\.pdf`
+
+#### Some examples of l
+
+```sh
+#
+# Search for all zipfiles under $HOME, sorted by filesize.
+#
+
+$ time l ~ size | igrep zip
+[... snip ...]
+107K   2015-07-10 07:34:51  /Users/atcat/Downloads/fix_yosemite_vm_graphic_performance.zip
+107K   2015-07-10 07:34:51  /Users/atcat/bin/fix_yosemite_vm_graphic_performance.zip
+1.3M   2015-07-01 23:36:27  /Users/atcat/Downloads/Knox-2.3.2.zip
+1.8M   2015-07-02 00:25:09  /Users/atcat/Downloads/HyperSwitch.zip
+2.1M   2015-06-29 19:09:36  /Users/atcat/Downloads/OptimalLayout2.zip
+12M    2015-06-29 19:32:52  /Users/atcat/Downloads/Geekbench-3.3.2-Mac.zip
+104M   2015-06-29 19:44:01  /Users/atcat/Downloads/CINEBENCH_R15.zip
+
+real	0m9.633s
+user	0m7.088s
+sys	0m2.662s
+
+#
+# Search for all zipfiles under $HOME upto three levels deep, sorted
+# by filesize.
+#
+
+$ time l ~ 3 size | igrep zip
+107K   2015-07-10 07:34:51  /Users/atcat/Downloads/fix_yosemite_vm_graphic_performance.zip
+107K   2015-07-10 07:34:51  /Users/atcat/bin/fix_yosemite_vm_graphic_performance.zip
+1.3M   2015-07-01 23:36:27  /Users/atcat/Downloads/Knox-2.3.2.zip
+1.8M   2015-07-02 00:25:09  /Users/atcat/Downloads/HyperSwitch.zip
+2.1M   2015-06-29 19:09:36  /Users/atcat/Downloads/OptimalLayout2.zip
+12M    2015-06-29 19:32:52  /Users/atcat/Downloads/Geekbench-3.3.2-Mac.zip
+104M   2015-06-29 19:44:01  /Users/atcat/Downloads/CINEBENCH_R15.zip
+
+
+real	0m0.479s
+user	0m0.333s
+sys	0m0.159s
+
+#
+# Search for our most recently downloaded pdfs.
+#
+$ l ~ 4 time | igrep \\.pdf
+2.5M  2015-06-30 18:58:37  /Users/atcat/Downloads/onlisp.pdf
+141K  2015-07-02 02:31:21  /Users/atcat/Downloads/jmc.pdf
+3.8M  2015-07-05 01:51:57  /Users/atcat/Downloads/The Art of the Interpreter.pdf
+160K  2015-07-05 17:36:25  /Users/atcat/Downloads/cljs-cheatsheet.pdf
+```
+
+
+
+## Commandline
 
 ### firstline, lastline, skipfirst, skiplast
 
