@@ -5,6 +5,8 @@
 #=====================================================================
 
 if [[ -z "$sospath" ]]; then
+if [[ -z "`cat $HOME/.bash_profile | grep '^sospath='`" ]]; then
+
 echo "# Add this to the bottom of your ~/.bash_profile file:"
 echo ""
 
@@ -14,7 +16,7 @@ read -r -d '' sos_bash_profile <<EOF
 #=====================================================================
 sospath="`pwd`"
 source "\$sospath/sos.sh"
-#source "$sospath/atcat/.bash_profile" 
+#source "\$sospath/atcat/.bash_profile" 
 unset sospath
 EOF
 cat <<EOF
@@ -31,6 +33,7 @@ EOF
 fi
 
 exit 1
+fi
 fi
 
 
