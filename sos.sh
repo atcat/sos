@@ -16,7 +16,8 @@ read -r -d '' sos_bash_profile <<EOF
 #=====================================================================
 sospath="`pwd`"
 source "\$sospath/sos.sh"
-#source "\$sospath/atcat/.bash_profile" 
+# comment or uncomment this depending on preference.
+source "\$sospath/atcat/.bash_profile" 
 unset sospath
 EOF
 cat <<EOF
