@@ -23,7 +23,7 @@ $sos_bash_profile
 EOF
 
 read -r -p "Add that to your ~/.bash_profile now? [Y/n] " response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+if [[ ${response:-Y} =~ ^([yY][eE][sS]|[yY])$ ]]
 then
 cat >>"$HOME/.bash_profile" <<EOF
 $sos_bash_profile
