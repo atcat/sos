@@ -41,3 +41,19 @@ $ hrs=2.5; echo "${hrs} hours is $(math "${hrs} * (60 * 60)") seconds"
 2.5 hours is 9000.0 seconds
 ```
 
+### trim, ltrim, rtrim
+
+Strips whitespace from both/left/right sides of stdin.
+(Note: To trim each line of stdin, use the `*trimlines` variants)
+
+```sh
+$ echo " foo bar "
+ foo bar 
+$ echo " foo bar " | trim
+foo bar$ 
+$ echo " foo bar " | rtrim
+ foo bar$ 
+$ echo " foo bar " | ltrim
+foo bar 
+```
+
