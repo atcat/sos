@@ -57,3 +57,19 @@ $ echo " foo bar " | ltrim
 foo bar 
 ```
 
+### revlines
+
+for line in stdin:
+  print reverse(line)
+
+```sh
+$ printf "foo\nbar\nbaz\n"
+foo
+bar
+baz
+$ printf "foo\nbar\nbaz\n" | revlines
+oof
+rab
+zab
+```
+
