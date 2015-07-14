@@ -13,3 +13,12 @@ $ $(echo "foo" | contains "g") && echo hi
 hi
 ```
 
+### flags
+
+Prints any commandline flags in stdin.
+
+```sh
+$ echo "This -v is -f an -h example." | flags
+ -v -f -h
+```
+
