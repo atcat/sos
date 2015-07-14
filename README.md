@@ -168,3 +168,57 @@ $ printf " 10\n 11\n 12\n 1\n 2\n 3\n" | natsort
  12
 ```
 
+### human2bytes, bytes2human
+
+`human2bytes` converts the first numeric column from a "human size" to bytes.
+
+`bytes2human` undoes the operation.  (Note: Lossy.)
+
+```sh
+$ echo "4K bytes" | human2bytes
+ 4096 bytes
+
+$ echo "4M bytes" | human2bytes
+ 4194304 bytes
+
+$ echo "4.5M bytes" | human2bytes
+ 4718592 bytes
+
+$ echo "4.5M bytes" | human2bytes | bytes2human
+4.5M bytes
+
+$ echo "4.5K bytes" | human2bytes
+ 4608 bytes
+```
+
+### humansizesort
+
+Performs `human2bytes | natsort | bytes2human`, i.e. natsorts by the
+first column (which is expected to represent a size in bytes).
+
+```sh
+ ls -laR | grep '^[d-]' | grep -v ' [.][.]\?/' -v | cols ,4 ,5:8 ,8: | last 10
+148B  Jul 14 04:39  trim*
+1.6K  Jul 14 05:11  trimlines*
+317B  Jul 14 01:01  whichapp*
+39B   Jul 14 04:20  col.txt
+102B  Jul 14 00:00  home/
+102B  Jul 14 00:00  Library/
+102B  Jul 14 00:00  Preferences/
+4.7K  Jul 14 00:00  net.lowndes.windowflow.plist
+165B  Jul 14 04:12  sosbin*
+3.0K  Jul 14 01:08  sospath*
+
+$ ls -laR | grep '^[d-]' | grep -v ' [.][.]\?/' -v | cols ,4 ,5:8 ,8: | last 10 | humansizesort
+39B   Jul 14 04:20  col.txt
+102B  Jul 14 00:00  Library/
+102B  Jul 14 00:00  Preferences/
+102B  Jul 14 00:00  home/
+148B  Jul 14 04:39  trim*
+165B  Jul 14 04:12  sosbin*
+317B  Jul 14 01:01  whichapp*
+1.6K  Jul 14 05:11  trimlines*
+3.0K  Jul 14 01:08  sospath*
+4.7K  Jul 14 00:00  net.lowndes.windowflow.plist
+```
+
