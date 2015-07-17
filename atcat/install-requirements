@@ -108,18 +108,17 @@ scriptdir="$(dirname "$scriptfile")"
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 #=====================================================================
-# Install Scripts
+# install prerequisites for various sos utilities.
 #=====================================================================
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cat <<'EOF'
 
 #=====================================================================
 # pip.
 #
-# We need pip for installing various python modules.
+# For installing python modules, e.g. `pip install natsort`
 #=====================================================================
 EOF
 
@@ -138,7 +137,7 @@ cat <<'EOF'
 #=====================================================================
 # pip install natsort
 #
-# Used by `humansort`.
+# Used by `natsort`, `humansizesort`, etc.
 #=====================================================================
 EOF
 
@@ -153,7 +152,7 @@ cat <<'EOF'
 # pip install splinter
 # https://splinter.readthedocs.org/en/latest/
 #
-# Used by `avail`. 
+# Browser automation.  Used by `avail`.
 #=====================================================================
 EOF
 
@@ -197,7 +196,7 @@ cat <<'EOF'
 #=====================================================================
 # ag.
 #
-# To search recursively through for a phrase.
+# To search recursively through files for a phrase.
 #=====================================================================
 EOF
 
@@ -212,7 +211,7 @@ cat <<'EOF'
 #=====================================================================
 # sf-pwgen.
 #
-# `pws` uses this to generate memorable passwords.
+# `pws` uses sf-pwgen to generate memorable passwords.
 #=====================================================================
 EOF
 
@@ -227,7 +226,7 @@ cat <<'EOF'
 #=====================================================================
 # tree and pypy.
 #
-# `l` needs `tree` to function and `pypy` to function quickly.
+# `l` uses tree to function and pypy to function quickly.
 #=====================================================================
 EOF
 
@@ -247,7 +246,7 @@ cat <<'EOF'
 #=====================================================================
 # ghead, from coreutils.
 #
-# `skip-last-n-lines` needs ghead, since os x's version of `head`
+# `skip-last-n-lines` needs ghead, since osx's version of `head`
 # doesn't support negative numbers.
 #=====================================================================
 EOF
@@ -262,6 +261,9 @@ cat <<'EOF'
 
 #=====================================================================
 # sponge, from moreutils.
+#
+# To use a file as both input and output.
+# e.g.  `cat foo.txt | replace ' ' '\n' | sponge foo.txt`
 #=====================================================================
 EOF
 
@@ -269,6 +271,22 @@ cat <<'EOF'
 brew install moreutils
 EOF
 brew install moreutils
+
+
+cat <<'EOF'
+
+#=====================================================================
+# wget.
+#
+# For downloading a URL as a file or webpage.  Used by `wgetfiles`.
+#=====================================================================
+EOF
+
+cat <<'EOF'
+brew install wget 
+EOF
+brew install wget 
+
 
 
 cat <<'EOF'
@@ -276,7 +294,8 @@ cat <<'EOF'
 #=====================================================================
 # nmap.
 #
-# Used by `pingsweep`, `portscan`, et al.
+# Swiss army knife of networking.  Used by `pingsweep`, `portscan`,
+# et al.
 #=====================================================================
 EOF
 
@@ -291,7 +310,7 @@ cat <<'EOF'
 #=====================================================================
 # arp-scan.
 #
-# Used by `netinfo-arp-scan`
+# For seeing who's on your local network.  Used by `netinfo-arp-scan`.
 #=====================================================================
 EOF
 
@@ -299,4 +318,141 @@ cat <<'EOF'
 brew install arp-scan 
 EOF
 brew install arp-scan 
+
+
+cat <<'EOF'
+#---------------------------------------------------------------------
+# A tutorial on `sos` networking utils
+#---------------------------------------------------------------------
+#
+# Use `netinfo-arp-scan` to map out a local network (useful after
+# SSHing into unknown territory):
+#
+#   $ netinfo-arp-scan
+#
+# Use `pingsweep` to determine whether hosts are alive:
+#
+#   Ping an IP using TCP connect.
+#   $ pingsweep 192.168.1.1
+#
+#   Ping a range of IPs using TCP connect.
+#   $ pingsweep 192.168.1.0/24
+#
+# Use `portscan*` to detect open ports and try to determine the name
+# and version number of running services:
+#
+#   Portscan + service fingerprint a box.  (Note: This will
+#   scan+fingerprint all 65,536 ports, which can be slow.)
+#   $ portscan 1.2.3.4
+#
+#   Portscan + service fingerprint the 1,000 most common ports, which
+#   as of 2008 will catch ~93% of open TCP ports.  (See [1].)
+#   $ portscan2 1.2.3.4
+#
+#   Portscan and service fingerprint the 100 most common ports.  (Try
+#   to stick with `portscan2` unless you're scanning a lot of IPs.
+#   Scanning 1,000 ports will give you a much more interesting view of
+#   the host.)
+#   $ portscan3 1.2.3.4
+#
+#   Scan port 80 and port 443.
+#   $ portscan2 1.2.3.4 -p80,443
+#
+#   Scan port 8080, 8443, and ports 1 through 1024.
+#   $ portscan2 1.2.3.4 -p8080,8443,1-1024
+#   
+# Use `netscan` to detect and portscan everyone on your network.
+# (It's interesting to run this at a hotel|starbucks|workplace.)
+# 
+#   $ netscan
+#
+#
+# [1] https://web.archive.org/web/20131028071915/http://jahboite.co.uk/blog/2008/09/nmap-4-75-new-features.html
+#
+# "As of 2008, about 93% of open TCP ports and roughly 98% of open UDP
+# ports are found on average with `portscan2`."
+#
+#---------------------------------------------------------------------
+# CIDR notation
+#---------------------------------------------------------------------
+#
+# You can use CIDR notation, since these scripts are simply wrappers
+# around `nmap`.
+#
+#   Ping all IPs from 192.168.1.1 through 192.168.1.255.
+#
+#   $ pingsweep 192.168.1.0/24
+#
+#   Starting Nmap 6.47 ( http://nmap.org ) at 2015-07-17 08:43 CDT
+#   192.168.1.1 Host is up, received syn-ack (0.027s latency).
+#   192.168.1.100 Host is up, received conn-refused (0.00019s latency).
+#   192.168.1.106 Host is up, received conn-refused (0.067s latency).
+#   192.168.1.115 Host is up, received conn-refused (0.053s latency).
+#   192.168.1.123 Host is up, received conn-refused (0.052s latency).
+#   Nmap done: 256 IP addresses (5 hosts up) scanned in 4.22 seconds
+#
+#---------------------------------------------------------------------
+# `beautify-portscan`
+#---------------------------------------------------------------------
+#
+# Note that you can pipe the output of any `portscan*` script into
+# `beautify-portscan`, which makes it much easier to read.
+#
+# (You can actually pipe in any nmap "greppable" output, for what it's
+# worth; all `portscan*` scripts configure nmap to use "greppable"
+# output.)
+#
+# Compare:
+#
+#   $ portscan3 8.8.8.8
+#   
+#   nmap -F -Pn -oG --initial-rtt-timeout=100ms --max-rtt-timeout=500ms --max-retries=2 -vv -sV -sT --version-light 8.8.8.8
+#   Nmap 6.47 scan initiated Fri Jul 17 08:05:54 2015 as: nmap -F -Pn -oG - --initial-rtt-timeout=100ms --max-rtt-timeout=500ms --max-retries=2 -vv -sV -sT --version-light 8.8.8.8
+#   Ports scanned: TCP(100;7,9,13,21-23,25-26,37,53,79-81,88,106,110-111,113,119,135,139,143-144,179,199,389,427,443-445,465,513-515,543-544,548,554,587,631,646,873,990,993,995,1025-1029,1110,1433,1720,1723,1755,1900,2000-2001,2049,2121,2717,3000,3128,3306,3389,3986,4899,5000,5009,5051,5060,5101,5190,5357,5432,5631,5666,5800,5900,6000-6001,6646,7070,8000,8008-8009,8080-8081,8443,8888,9100,9999-10000,32768,49152-49157) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+#   Host: 8.8.8.8 (google-public-dns-a.google.com)	Status: Up
+#   Host: 8.8.8.8 (google-public-dns-a.google.com)	Ports: 53/open/tcp//tcpwrapped///	Ignored State: filtered (99)
+#   Nmap done at Fri Jul 17 08:05:59 2015 -- 1 IP address (1 host up) scanned in 4.83 seconds
+#   
+#   $ portscan3 8.8.8.8 | beautify-portscan
+#   
+#   8.8.8.8  53        open  tcp  tcpwrapped
+#   8.8.8.8  filtered  (99)
+#
+#
+# So, out of the 100 ports we scanned, only port 53 was open.  Here's
+# a more interesting example:
+#
+#
+#   $ portscan3 news.ycombinator.com
+#   
+#   nmap -F -Pn -oG --initial-rtt-timeout=100ms --max-rtt-timeout=500ms --max-retries=2 -vv -sV -sT --version-light news.ycombinator.com
+#   Nmap 6.47 scan initiated Fri Jul 17 08:19:16 2015 as: nmap -F -Pn -oG - --initial-rtt-timeout=100ms --max-rtt-timeout=500ms --max-retries=2 -vv -sV -sT --version-light news.ycombinator.com
+#   Ports scanned: TCP(100;7,9,13,21-23,25-26,37,53,79-81,88,106,110-111,113,119,135,139,143-144,179,199,389,427,443-445,465,513-515,543-544,548,554,587,631,646,873,990,993,995,1025-1029,1110,1433,1720,1723,1755,1900,2000-2001,2049,2121,2717,3000,3128,3306,3389,3986,4899,5000,5009,5051,5060,5101,5190,5357,5432,5631,5666,5800,5900,6000-6001,6646,7070,8000,8008-8009,8080-8081,8443,8888,9100,9999-10000,32768,49152-49157) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+#   Warning: Hostname news.ycombinator.com resolves to 2 IPs. Using 198.41.190.47.
+#   Host: 198.41.190.47 ()	Status: Up
+#   Host: 198.41.190.47 ()	Ports: 80/open/tcp//http//cloudflare-nginx/, 443/open/tcp//ssl|https//cloudflare-nginx/, 8080/open/tcp//http//cloudflare-nginx/, 8443/open/tcp//ssl|https-alt?///	Ignored State: filtered (96)
+#   Nmap done at Fri Jul 17 08:19:42 2015 -- 1 IP address (1 host up) scanned in 25.86 seconds
+#   
+#   $ portscan3 news.ycombinator.com | beautify-portscan
+#   
+#   Warning: Hostname news.ycombinator.com resolves to 2 IPs. Using 198.41.190.47.
+#   198.41.190.47  80        open  tcp  http            cloudflare-nginx
+#   198.41.190.47  443       open  tcp  ssl|https       cloudflare-nginx
+#   198.41.190.47  8080      open  tcp  http            cloudflare-nginx
+#   198.41.190.47  8443      open  tcp  ssl|https-alt?
+#   198.41.190.47  filtered  (96)
+#
+# 
+# They're using cloudflare.  The box has open http ports 80 and
+# 8080, and open https ports on 443 and 8443.
+#
+# Note that you'll want to use portscan2 most of the time.  Remember:
+# `portscan` scans all 65536 ports.  `portscan2` scans the top 1000,
+# which catches ~90% of them.  `portscan3` scans the top 100 ports,
+# which is mainly useful when you're scanning a lot of IPs.
+#
+
+
+
+EOF
 
