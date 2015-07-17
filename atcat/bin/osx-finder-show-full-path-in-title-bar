@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cat <<'EOF'
+
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES
+EOF
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES
+
+
+cat <<'EOF'
+
+Now run the following command:
+
+killall Finder
+
+EOF
+

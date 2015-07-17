@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#=====================================================================
+# Downloads an installer which 
+#=====================================================================
+#
+# If you're running VMware Fusion, you may have noticed that when you
+# run a Yosemite VM, the framerate is about 10fps and hardly usable.
+#
+# A program called "BeamOff" fixes that.  More info:
+#
+#   https://github.com/rtrouton/rtrouton_scripts/tree/master/rtrouton_scripts/fix_yosemite_vm_graphic_performance
+#
+# "When I tested the compiled BeamOff application, I saw a considerable
+# improvement in how fast the VM was now responding. The window redraw
+# issues I had previously seen were now also addressed, where windows
+# were now being refreshed correctly regardless if they were in the
+# background or foreground."
+#
+# This script downloads rtrouton's BeamOff installer, which:
+# - installs /Applications/BeamOff.app
+# - configures /Library/LaunchAgents to launch it on login.
+#
+
+installer_url='https://git.io/beamoff-test1'
+installer_name='Fix Yosemite VM Graphics Performance.pkg'
+
+if [ -e "$installer_name" ]; then
+  1>&2 echo "vmware-fix-yosemite-lag: '$installer_name' exists; exiting."
+  exit 1
+fi
+
+# http://unix.stackexchange.com/questions/2690/how-to-redirect-output-of-wget-as-input-to-unzip/125102#125102
+wget -qO- "$installer_url" | funzip >"$installer_name"
+
+cat <<EOF
+
+To fix Yosemite's laggy graphics, run the following command:
+
+open '$installer_name'
+
+EOF
+
